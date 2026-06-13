@@ -1,0 +1,68 @@
+# NOVA 2.0 — Framework-Konfiguration
+# Muster übernommen von BMAD v6 core module.yaml (config-getriebene Sprache),
+# verschärft um NOVAs Copilot-Invarianten (tasks.md §1).
+
+name: nova
+version: 0.5.0            # Phase 4 — Finalisierung (0: Fundament · 1: Planung · 2: Schreiben · 3: Review)
+short_title: NOVA 2.0 — Novel Orchestration & Validation Architecture
+slash_prefix: nova
+description: >-
+  Autor-zentriertes, Drei-Akt-fundiertes Claude-Code-Framework zum Schreiben
+  von Romanen. Copilot, nicht Autopilot. Skill-first (siehe phase0/05).
+
+# --- Sprache (DE/EN, Invariante 6) — config-getrieben wie BMAD v6 ---
+communication_language: Deutsch       # Sprache der Agent-Kommunikation
+document_output_language: Deutsch     # Sprache der erzeugten Dokumente
+supported_languages: [de, en]
+
+# --- Autor / Projekt ---
+author_name: "Autor"                  # Anrede; pro Projekt überschreibbar
+default_project_dir: "projects"
+
+# --- Modus-Architektur (Invariante 1) ---
+# Default-Modus JEDES Agenten ist nicht-generativ. Details: nova/modes/modes.yaml
+default_mode: SUGGEST
+modes_ref: "nova/modes/modes.yaml"
+
+# --- GHOSTWRITE = Feature-Flag, Default AUS (Invariante 1, Overview Rec.2) ---
+ghostwrite:
+  enabled: false
+  # Schwelle zum Umschalten (Overview Rec.2): Continuity-Gate < 5% False-Positives,
+  # bevor GHOSTWRITE-Output ohne manuelle Nachkontrolle ins Manuskript darf.
+  benchmark_continuity_false_positive_threshold: 0.05
+
+# --- Drei-Akt-Backbone (Invariante 2) — Weiland-Meilensteinmarken ---
+structure:
+  model: three-act               # Default-Backbone
+  act_proportions: { act1: 25, act2: 50, act3: 75 }   # kumulierte Akt-Enden in %
+  milestones_percent:            # Weiland (data/craft-authorities.md)
+    inciting_incident: 12
+    first_plot_point: 25
+    first_pinch_point: 37
+    midpoint: 50
+    second_pinch_point: 62
+    third_plot_point: 75
+    climax: 88
+  deviation_tolerance_percent: 5  # >±5% ⇒ WARNUNG, kein Block (Autor entscheidet)
+
+# --- Provenienz (Invariante 5) ---
+provenance:
+  ai_markup_open: "<!-- NOVA:AI start"
+  ai_markup_close: "<!-- NOVA:AI end -->"
+  commit_types: [ai, human, plan, gate, chore, docs]
+  commit_trailer: "NOVA-Provenance"
+
+# --- Voice-Matching gestuft (Invariante 8) ---
+voice:
+  fine_tuning_enabled: false      # nur mit ausdrücklicher Einwilligung + Kennzeichnung
+  foreign_author_style_refusal: true   # Refusal-Protokoll "im Stil von [fremdem Autor]"
+
+# --- Finalisierung / Publishing (Phase 4, Overview §8) ---
+publishing:
+  formats: [epub]                 # stdlib-only EPUB-3-Builder (kein JSZip/EbookLib)
+  output_dir: "export"            # je Projekt: projects/<p>/export/ (gitignored, reproduzierbar)
+  kdp_package: true               # design-package.md (Spezifikation; KEIN Auto-Upload, KEIN Cover-Bild)
+  # Pre-Export-Gate (HART, nicht überspringbar): Provenienz (Rec.5) + Continuity blocken; Struktur=Warnung, Voice=Flag.
+  preflight_blockers: [provenance, continuity]
+  preflight_warnings: [structure, voice]
+  provenance_ledger: "_memory/provenance/ledger.json"   # zweite Provenienz-Spur (Ledger↔Markup, DR-22)

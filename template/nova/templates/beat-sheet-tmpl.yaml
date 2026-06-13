@@ -1,0 +1,41 @@
+# NOVA Story-Bible Template — Beat-Sheet (Drei-Akt)  (LEER, Marken vorbefüllt)
+# Trägt die Drei-Akt-Felder (Invariante 2). Konsumiert von:
+#   .claude/skills/nova-beat-percentage-check/scripts/check_marks.py  (Feld `beats:` mit id/soll_prozent/ist_prozent)
+# EIN gemeinsames Akt-Modell speist Beat-Sheet UND Szenenliste (scene-list-tmpl referenziert beat_id).
+template:
+  id: beat-sheet
+  name_de: Beat-Sheet (Drei-Akt)
+  name_en: Beat Sheet (Three-Act)
+  version: 0.1.0
+  lang: [de, en]
+  bible_id_prefix: BEAT
+  output: { format: markdown, filename: "{{title}}-beat-sheet.md" }
+
+workflow:
+  elicitation: true
+  allow_skip: false
+
+structure:
+  model: three-act
+  acts:
+    - { id: 1, name_de: "Akt 1 — Setup", name_en: "Act 1 — Setup", anteil_prozent: 25 }
+    - { id: 2, name_de: "Akt 2 — Konfrontation", name_en: "Act 2 — Confrontation", anteil_prozent: 50 }
+    - { id: 3, name_de: "Akt 3 — Auflösung", name_en: "Act 3 — Resolution", anteil_prozent: 25 }
+  deviation_tolerance_percent: 5     # >±5% ⇒ Warnung, kein Block
+
+# Meilensteine als Platzhalter VORBEFÜLLT mit Weiland-Marken (soll_prozent).
+# ist_prozent bleibt leer (null) bis der Autor/Plot-Architect Szenen platziert.
+beats:
+  - { id: hook,               akt: 1, soll_prozent: 1,  ist_prozent: null, name_de: "Hook",                 name_en: "Hook",                 zweck_de: "Leser fesseln",              szenen: [] }
+  - { id: inciting_incident,  akt: 1, soll_prozent: 12, ist_prozent: null, name_de: "Auslösendes Ereignis", name_en: "Inciting Incident",    zweck_de: "Gleichgewicht stören",       szenen: [] }
+  - { id: first_plot_point,   akt: 1, soll_prozent: 25, ist_prozent: null, name_de: "Erster Wendepunkt",    name_en: "First Plot Point",     zweck_de: "Door of no return",          szenen: [] }
+  - { id: first_pinch_point,  akt: 2, soll_prozent: 37, ist_prozent: null, name_de: "Erster Pinch Point",   name_en: "First Pinch Point",    zweck_de: "Antagonist. Kraft erinnern", szenen: [] }
+  - { id: midpoint,           akt: 2, soll_prozent: 50, ist_prozent: null, name_de: "Midpoint",             name_en: "Midpoint",             zweck_de: "Reaktion → Aktion",          szenen: [] }
+  - { id: second_pinch_point, akt: 2, soll_prozent: 62, ist_prozent: null, name_de: "Zweiter Pinch Point",  name_en: "Second Pinch Point",   zweck_de: "Antagonist zeigt Macht",     szenen: [] }
+  - { id: third_plot_point,   akt: 2, soll_prozent: 75, ist_prozent: null, name_de: "Dritter Wendepunkt",   name_en: "Third Plot Point",     zweck_de: "All is lost / Krise",        szenen: [] }
+  - { id: climax,             akt: 3, soll_prozent: 88, ist_prozent: null, name_de: "Klimax",               name_en: "Climax",               zweck_de: "Finale Konfrontation",       szenen: [] }
+  - { id: resolution,         akt: 3, soll_prozent: 97, ist_prozent: null, name_de: "Auflösung",            name_en: "Resolution / Denouement", zweck_de: "Denouement",                szenen: [] }
+
+# Optionale Overlays (nicht-default): save_the_cat, seven_point, heroes_journey
+# → data/craft-authorities.md. Drei-Akt bleibt Backbone.
+overlays_enabled: []

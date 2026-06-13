@@ -1,0 +1,7 @@
+{
+  "name": "nova",
+  "version": "0.5.0",
+  "description": "NOVA 2.0 — autor-zentriertes, Drei-Akt-fundiertes Claude-Code-Framework zum Schreiben von Romanen. Copilot, nicht Autopilot. Skill-first. Planung → Schreiben → Review → Finalisierung (EPUB/KDP, Provenienz-Gate).",
+  "author": "NOVA",
+  "keywords": ["writing", "novel", "fiction", "three-act", "copilot", "skills", "epub", "publishing"]
+}

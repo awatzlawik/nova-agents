@@ -1,0 +1,11 @@
+{
+  "project": "_EXAMPLE",
+  "current_phase": 0,
+  "phases": {
+    "0": { "status": "skeleton", "user_approved": false, "artifacts": [] },
+    "1": { "status": "not_started", "user_approved": false, "artifacts": [] },
+    "2": { "status": "not_started", "user_approved": false, "artifacts": [] },
+    "3": { "status": "not_started", "user_approved": false, "artifacts": [] },
+    "4": { "status": "not_started", "user_approved": false, "artifacts": [] }
+  }
+}

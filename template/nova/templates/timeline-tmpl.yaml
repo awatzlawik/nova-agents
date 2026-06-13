@@ -1,0 +1,35 @@
+# NOVA Story-Bible Template — Timeline  (LEER, strukturell vollständig)
+template:
+  id: timeline
+  name_de: Timeline / Chronologie
+  name_en: Timeline / Chronology
+  version: 0.1.0
+  lang: [de, en]
+  bible_id_prefix: TIME
+  output: { format: markdown, filename: "{{title}}-timeline.md" }
+
+workflow:
+  elicitation: true
+  allow_skip: false
+
+sections:
+  - id: events
+    title_de: Ereignisse (chronologisch vs. erzählt)
+    title_en: Events (chronological vs. narrated order)
+    repeatable: true
+    elicit: true
+    fields:
+      - id                  # TIME-NNN
+      - ereignis_de
+      - event_en
+      - chrono_zeit         # Zeitpunkt in der Story-Welt (Datum/Uhrzeit)
+      - erzaehl_position    # wo im Manuskript erzählt (SCENE-ID)
+      - strang              # paralleler Handlungsstrang (für Multi-Thread)
+      - wetter_datum        # Continuity-Detail (Datum/Wetter)
+      - bible_refs          # [CHAR-..., WORLD-...]
+  - id: parallel_threads
+    title_de: Parallele Stränge
+    title_en: Parallel threads
+    repeatable: true
+    fields: [id, name, beteiligte_chars]
+    elicit: true

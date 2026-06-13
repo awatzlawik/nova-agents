@@ -1,0 +1,47 @@
+# NOVA 2.0 — Modus-Baustein (Invariante 1: Copilot, nicht Autopilot)
+# DER wiederverwendbare Baustein für ALLE Personas/Skills. Jede Persona referenziert
+# diese Datei und setzt persona.default_mode (nie GHOSTWRITE als Default).
+#
+# Mechanik der Interaktion (nummerierte Elicitation, HALT-Steps) ist aus BMAD übernommen;
+# die Strenge (nicht-generativer Default, GHOSTWRITE als Flag) folgt Invarianten 1 & 5.
+
+modes:
+  SUGGEST:
+    generative: false
+    writes_manuscript: false
+    desc_de: "Vorschläge, offene Fragen, alternative Formulierungen am Rand — keine fertige Prosa."
+    desc_en: "Inline suggestions, open questions, alternative phrasings — no finished prose."
+
+  CRITIQUE:
+    generative: false
+    writes_manuscript: false
+    desc_de: "Analyse und Feedback zu vorhandenem Text/Plan. Bewertet, schreibt nicht um."
+    desc_en: "Analysis and feedback on existing text/plan. Evaluates; does not rewrite."
+
+  CHECK:
+    generative: false
+    writes_manuscript: false
+    desc_de: "Quality-Gate-Prüfung gegen eine Checkliste/Regel. Liefert Befund."
+    desc_en: "Quality-gate validation against a checklist/rule. Returns a verdict."
+    returns: "AgentResult{ pass: bool, findings: [ {severity, location, message_de, message_en} ] }"
+
+  GHOSTWRITE:
+    enabled: false                 # Invariante 1 — Feature-Flag, Default AUS
+    generative: true
+    writes_manuscript: true
+    invocation: explicit_only      # nur per eigenem Skill mit disable-model-invocation:true
+    requires:
+      - provenance_markup          # <!-- NOVA:AI ... --> erzwungen (conventions/provenance.md)
+      - provenance_commit          # Commit-Typ ai: erzwungen
+    return_control: [annehmen, ueberarbeiten, neu_generieren, verwerfen]   # accept/revise/regenerate/discard
+    post_check: continuity         # Continuity-Checker validiert generierte Passage automatisch
+    benchmark_gate: "Continuity-Gate < 5% False-Positives (config.ghostwrite.benchmark...) vor ungeprüfter Übernahme."
+
+default_mode: SUGGEST
+
+# Durchsetzung im Skill-first-Modell (phase0/05):
+#  - Persona-Skills tragen die Modus-Disziplin als HALT-Steps im Body
+#    ("ohne ausdrückliche Aufforderung keine fertige Prosa erzeugen").
+#  - GHOSTWRITE ist KEIN Modus-Toggle, sondern ein eigener Skill mit
+#    Frontmatter `disable-model-invocation: true` ⇒ technisch nicht auto-aufrufbar.
+#  - Moduswechsel (SUGGEST↔CRITIQUE↔CHECK) per Command `*mode <NAME>`.

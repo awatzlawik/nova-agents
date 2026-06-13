@@ -1,0 +1,41 @@
+# NOVA Story-Bible Template — Szenenliste  (LEER, strukturell vollständig)
+# Jede Szene referenziert EIN gemeinsames Drei-Akt-Modell über `beat_id` (→ beat-sheet-tmpl)
+# und verknüpft Bible-Einträge über `bible_refs` (→ CHAR-/WORLD-IDs). Continuity-fähig (Phase 2/3).
+template:
+  id: scene-list
+  name_de: Szenenliste
+  name_en: Scene List
+  version: 0.1.0
+  lang: [de, en]
+  bible_id_prefix: SCENE       # SCENE-001 …
+  output: { format: markdown, filename: "{{title}}-scene-list.md" }
+
+workflow:
+  elicitation: true
+  allow_skip: false
+
+sections:
+  - id: overview
+    title_de: Übersicht (Szenenzahl, Akt-Aufteilung, Wendepunkte)
+    title_en: Overview (scene count, act breakdown, turning points)
+    elicit: true
+  - id: scenes
+    title_de: Szenen
+    title_en: Scenes
+    repeatable: true
+    elicit: true
+    fields:
+      - id                  # SCENE-NNN (stabil)
+      - kurzname_de
+      - short_name_en
+      - zusammenfassung
+      - pov                 # POV-Figur (CHAR-ID)
+      - ort                 # WORLD-ID oder freier Ort
+      - zeit                # Zeitpunkt (→ timeline)
+      - akt                 # 1|2|3
+      - beat_id             # → beat-sheet-tmpl.beats[].id  (KEIN zweites Strukturmodell!)
+      - ziel                # Scene goal
+      - konflikt            # Conflict/obstacle
+      - ausgang             # Outcome/disaster
+      - bible_refs          # [CHAR-..., WORLD-...] verknüpfte Bible-Einträge
+      - hook                # Hook in die nächste Szene

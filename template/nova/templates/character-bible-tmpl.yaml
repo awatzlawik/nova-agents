@@ -1,0 +1,61 @@
+# NOVA Story-Bible Template — Character Bible (je Figur) inkl. Voice-Sheet  (LEER)
+# Voice-Sheet-Felder sind kompatibel zum späteren Style/Voice-Guardian (Phase 2)
+# und Continuity-Checker (Phase 3) — Kohärenz-Gate Phase 1.
+template:
+  id: character-bible
+  name_de: Charakter-Bibel
+  name_en: Character Bible
+  version: 0.1.0
+  lang: [de, en]
+  bible_id_prefix: CHAR        # CHAR-001 … (referenziert aus Szenen + Continuity-DB)
+  output: { format: markdown, filename: "{{character_name}}-character.md" }
+
+workflow:
+  elicitation: true
+  allow_skip: false
+
+# Pro Figur ein Dokument. `id` stabil.
+sections:
+  - id: identity
+    title_de: Identität
+    title_en: Identity
+    fields: [id, name, rolle_de, role_en, alter, beschreibung]
+    elicit: true
+  - id: want_need
+    title_de: Want / Need
+    title_en: Want / need
+    fields: [want_de, want_en, need_de, need_en]
+    elicit: true
+  - id: lie_truth
+    title_de: Lie / Truth (Glaube vs. Wahrheit)
+    title_en: Lie the character believes / Truth
+    fields: [lie_de, lie_en, truth_de, truth_en]
+    elicit: true
+  - id: backstory
+    title_de: Hintergrund / prägende Ereignisse
+    title_en: Backstory / formative events
+    elicit: true
+  - id: relationships
+    title_de: Beziehungen
+    title_en: Relationships
+    repeatable: true
+    fields: [ziel_char_id, art_de, type_en]    # ziel_char_id referenziert andere CHAR-IDs
+    elicit: true
+  - id: arc_mapping
+    title_de: Arc-Mapping über die drei Akte
+    title_en: Arc mapping across the three acts
+    fields: [akt1_zustand, akt2_wende, akt3_zustand]   # an Drei-Akt-Backbone gekoppelt (Invariante 2)
+    elicit: true
+  # ── VOICE-SHEET (für Dialogue-Specialist & Style-Guardian, Phase 2) ──────────────
+  - id: voice_sheet
+    title_de: Voice-Sheet (Stimm-Profil)
+    title_en: Voice sheet
+    fields:
+      - lexik_de            # bevorzugte Wörter/Register DE
+      - lexicon_en          # preferred words/register EN
+      - satzrhythmus        # kurz/lang, parataktisch/hypotaktisch
+      - tics                # Sprech-Tics, Füllwörter, Eigenheiten
+      - register            # formell/informell, Dialekt/Soziolekt
+      - verbotsliste        # was die Figur NIE sagen würde
+      - beispielzitate      # 2–3 O-Ton-Beispiele (Mimicry-Referenz, Invariante 8)
+    elicit: true

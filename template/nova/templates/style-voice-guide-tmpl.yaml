@@ -1,0 +1,46 @@
+# NOVA Story-Bible Template — Style/Voice-Guide  (LEER, strukturell vollständig)
+# Autor-Stimme (nicht Figuren-Stimme — die liegt im Character-Voice-Sheet).
+# Speist Style/Voice-Guardian (Phase 2) & Voice-Gate (Phase 3). AI-isms-Listen DE/EN getrennt.
+template:
+  id: style-voice-guide
+  name_de: Stil-/Stimm-Leitfaden (Autor)
+  name_en: Style / Voice Guide (author)
+  version: 0.1.0
+  lang: [de, en]
+  bible_id_prefix: STYLE
+  output: { format: markdown, filename: "{{title}}-style-voice-guide.md" }
+
+workflow:
+  elicitation: true
+  allow_skip: false
+
+sections:
+  - id: narration
+    title_de: Erzählhaltung
+    title_en: Narration
+    fields: [pov, tempus, tonalitaet_de, tone_en, erzaehldistanz]
+    elicit: true
+  - id: author_samples
+    title_de: Autor-Beispielpassagen (Mimicry-Referenz)
+    title_en: Author sample passages (mimicry reference)
+    instruction_de: "In-Context-Referenz für Voice-Matching (Invariante 8, Stufe 1)."
+    repeatable: true
+    elicit: true
+  - id: ai_isms_de
+    title_de: Verbotsliste — KI-Floskeln (Deutsch)
+    title_en: Banlist — AI-isms (German)
+    instruction_de: "Deutsche Floskeln/Klischees/Anglizismen, die der Style-Guardian flaggt."
+    repeatable: true
+    elicit: false
+  - id: ai_isms_en
+    title_de: Verbotsliste — KI-Floskeln (Englisch)
+    title_en: Banlist — AI-isms (English)
+    repeatable: true
+    elicit: false
+  - id: voice_fine_tuning
+    title_de: Voice-Fine-Tuning (Stufe 2 — nur mit Einwilligung)
+    title_en: Voice fine-tuning (tier 2 — consent only)
+    instruction_de: "Default AUS (config.voice.fine_tuning_enabled=false). Nur mit ausdrücklicher
+      Einwilligung + Kennzeichnung. Refusal-Protokoll für 'im Stil von [fremdem Autor]'."
+    fields: [einwilligung_erteilt, kennzeichnung, eigene_textmenge]
+    elicit: true

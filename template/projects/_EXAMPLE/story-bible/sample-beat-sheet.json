@@ -1,0 +1,10 @@
+{
+  "_comment": "Integrations-Fixture für nova-beat-percentage-check. Bewusst eine Abweichung (midpoint @58) zur Demonstration der WARNUNG.",
+  "beats": [
+    { "id": "inciting_incident", "akt": 1, "soll_prozent": 12, "ist_prozent": 13 },
+    { "id": "first_plot_point",  "akt": 1, "soll_prozent": 25, "ist_prozent": 24 },
+    { "id": "midpoint",          "akt": 2, "soll_prozent": 50, "ist_prozent": 58 },
+    { "id": "third_plot_point",  "akt": 2, "soll_prozent": 75, "ist_prozent": 76 },
+    { "id": "climax",            "akt": 3, "soll_prozent": 88, "ist_prozent": 89 }
+  ]
+}

@@ -1,0 +1,53 @@
+# NOVA Story-Bible Template — World Bible  (LEER, strukturell vollständig)
+template:
+  id: world-bible
+  name_de: Welt-Bibel
+  name_en: World Bible
+  version: 0.1.0
+  lang: [de, en]
+  bible_id_prefix: WORLD     # Einträge: WORLD-001 … (stabile IDs für Continuity Phase 2/3)
+  output: { format: markdown, filename: "{{title}}-world-bible.md" }
+
+workflow:
+  elicitation: true
+  allow_skip: false
+
+# Jeder Eintrag bekommt eine stabile `id` (bible_id_prefix-NNN) → referenzierbar aus
+# Szenenliste (bible_refs) und Continuity-DB (_memory/continuity/world.json).
+sections:
+  - id: setting_overview
+    title_de: Setting-Übersicht
+    title_en: Setting overview
+    elicit: true
+  - id: rules_laws
+    title_de: Regeln / Naturgesetze
+    title_en: Rules / natural laws
+    repeatable: true
+    fields: [id, name_de, name_en, beschreibung_de, beschreibung_en]
+    elicit: true
+  - id: magic_tech_system
+    title_de: Magie-/Technik-System
+    title_en: Magic / technology system
+    repeatable: true
+    fields: [id, name, regeln_de, regeln_en, kosten_grenzen]
+    elicit: true
+  - id: geography
+    title_de: Geografie / Orte
+    title_en: Geography / places
+    repeatable: true
+    fields: [id, ort_de, place_en, beschreibung]
+    elicit: true
+  - id: history
+    title_de: Geschichte / Zeitleiste der Welt
+    title_en: History / world timeline
+    elicit: true
+  - id: factions
+    title_de: Fraktionen / Organisationen
+    title_en: Factions / organizations
+    repeatable: true
+    fields: [id, name, ziel_de, goal_en, beziehung_zu]
+    elicit: true
+  - id: culture
+    title_de: Kultur / Sprache / Bräuche
+    title_en: Culture / language / customs
+    elicit: true

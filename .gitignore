@@ -1,0 +1,17 @@
+# Node
+node_modules/
+npm-debug.log*
+*.tgz
+.npm/
+
+# Python cruft (must never ship inside template/)
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# OS / Editor
+.DS_Store
+*.swp
+.idea/
+.vscode/

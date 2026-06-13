@@ -1,0 +1,48 @@
+# NOVA Story-Bible Template — Premise / Prämisse  (LEER, strukturell vollständig)
+# Engine-Muster: BMAD v4 (template/workflow/sections/elicit). NOVA-Erweiterung: lang, bible_id.
+template:
+  id: premise
+  name_de: Prämisse / Logline
+  name_en: Premise / Logline
+  version: 0.1.0
+  lang: [de, en]
+  bible_id_prefix: PREM
+  output: { format: markdown, filename: "{{title}}-premise.md" }
+
+workflow:
+  elicitation: true        # nummerierte Elicitation (facilitation-over-generation, Invariante 1)
+  allow_skip: false
+
+sections:
+  - id: logline
+    title_de: Logline (ein Satz)
+    title_en: Logline (one sentence)
+    instruction_de: "Wenn [auslösendes Ereignis], muss [Protagonist] [Ziel], sonst [Einsatz]."
+    instruction_en: "When [inciting incident], [protagonist] must [goal], or else [stakes]."
+    elicit: true
+  - id: premise_paragraph
+    title_de: Prämisse (Absatz)
+    title_en: Premise (paragraph)
+    instruction_de: "5–7 Sätze: Welt, Protagonist, auslösendes Ereignis, Konflikt, Einsatz."
+    instruction_en: "5–7 sentences: world, protagonist, inciting incident, conflict, stakes."
+    elicit: true
+  - id: central_question
+    title_de: Zentrale Story-Frage
+    title_en: Central story question
+    instruction_de: "Die dramatische Frage, die das Buch beantwortet."
+    instruction_en: "The dramatic question the book answers."
+    elicit: true
+  - id: stakes
+    title_de: Einsatz / Stakes
+    title_en: Stakes
+    fields: [persoenlich_de, persoenlich_en, weiter_de, weiter_en, ticking_clock]
+    elicit: true
+  - id: theme
+    title_de: Thema
+    title_en: Theme
+    elicit: true
+  - id: genre_audience
+    title_de: Genre & Zielgruppe & Comparables
+    title_en: Genre & audience & comparables
+    fields: [genre, zielgruppe_de, audience_en, comparables]
+    elicit: true

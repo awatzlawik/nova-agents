@@ -51,20 +51,22 @@ npx nova-agents
 
 > ℹ️ Der kurze Name `nova` ist auf npm bereits vergeben — verwende daher `nova-agents`.
 
-### Der Installer fragt dich drei Dinge
+### Der Installer fragt dich vier Dinge
 
 ```
 ◆ NOVA  ·  npx nova-agents
   NOVA installieren — autor-zentriertes Schreib-Framework für Claude Code
 
+? Projektname / Project name               ← Name deines Romans (zuerst)
 ? Sprache der Agenten? [de/en] (de)        ← de oder en
 ? In welchen Ordner installieren? (…)      ← Enter = aktueller Ordner
 ? Wie heißt du? (Anrede der Agenten) (Autor)  ← dein Name
 ```
 
-1. **Sprache** (`de` / `en`) — wird in `nova/config.yaml` als `communication_language` und `document_output_language` gesetzt.
-2. **Zielordner** — Default ist der aktuelle Ordner (Enter genügt). Existiert er nicht, wird er angelegt.
-3. **Dein Name** — wird als `author_name` gespeichert. **Jeder Agent begrüßt dich danach mit deinem Namen.**
+1. **Projektname** — wird zu `projects/<dein-projekt>/` und neben `projects/_EXAMPLE/` automatisch mit der vollständigen `_memory/`-Struktur angelegt (**ohne** Beispiel-Dateien). Leerzeichen werden zu `-`, Umlaute bleiben erhalten.
+2. **Sprache** (`de` / `en`) — wird in `nova/config.yaml` als `communication_language` und `document_output_language` gesetzt.
+3. **Zielordner** — Default ist der aktuelle Ordner (Enter genügt). Existiert er nicht, wird er angelegt.
+4. **Dein Name** — wird als `author_name` gespeichert. **Jeder Agent begrüßt dich danach mit deinem Namen.**
 
 ### Ohne Rückfragen (CI / Skripte)
 
@@ -74,6 +76,7 @@ npx github:awatzlawik/nova-agents --dir ./mein-roman --lang de --name "Anton" --
 
 | Flag | Beschreibung | Default |
 |------|--------------|---------|
+| `--project <name>` | Projektname → legt `projects/<name>/` an (ohne Beispiel-Dateien) | `mein-roman` / `my-novel` |
 | `--dir <pfad>`   | Zielordner | aktueller Ordner |
 | `--lang <de\|en>`| Agenten- & Dokumentsprache | `de` |
 | `--name <name>`  | Anrede / `author_name` | `Autor` / `Author` |
@@ -184,8 +187,11 @@ exportieren, bevor das Review grün ist.
    python3 .claude/skills/nova-provenance-export-gate/scripts/scan_ai_prose.py \
      "projects/_EXAMPLE/manuscript/*.md"
    ```
-3. **Eigenes Projekt anlegen** — kopiere `projects/_EXAMPLE/` nach `projects/<dein-projekt>/`.
-   Dieses Skelett enthält schon die richtige `_memory/`-Struktur (Story Bible, Continuity, Gates).
+3. **Eigenes Projekt anlegen** — der Installer hat es bereits getan: Beim Setup wird zuerst nach
+   dem **Projektnamen** gefragt und neben `projects/_EXAMPLE/` automatisch `projects/<dein-projekt>/`
+   angelegt — mit der richtigen `_memory/`-Struktur (Story Bible, Continuity, Gates), aber **ohne**
+   die Beispiel-Dateien. Ein weiteres Projekt legst du jederzeit von Hand an, indem du
+   `projects/_EXAMPLE/` nach `projects/<dein-projekt>/` kopierst.
 
 > 💡 **Immer dein Startpunkt danach:** `/nova-orchestrator` → `*plan <dein-projekt>` zeigt dir den
 > Pipeline-Stand und nennt die **nächste offene Stufe**.

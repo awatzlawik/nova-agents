@@ -60,6 +60,9 @@ const STRINGS = {
     settingsSet: 'Sprache und Name in nova/config.yaml gesetzt',
     abort: 'Abgebrochen.',
     overwriteWarn: 'Hinweis: vorhandene NOVA-Dateien in diesem Ordner werden überschrieben.',
+    defaultProject: 'mein-roman',
+    projectCreated: 'Projektordner angelegt (ohne Beispiel-Dateien):',
+    projectExists: 'Hinweis: der Projektordner existiert bereits — Dateien werden ergänzt/überschrieben.',
   },
   en: {
     intro: 'Install NOVA — the author-centric writing framework for Claude Code',
@@ -77,6 +80,9 @@ const STRINGS = {
     settingsSet: 'Language and name set in nova/config.yaml',
     abort: 'Aborted.',
     overwriteWarn: 'Note: existing NOVA files in this folder will be overwritten.',
+    defaultProject: 'my-novel',
+    projectCreated: 'Project folder created (without sample files):',
+    projectExists: 'Note: the project folder already exists — files will be merged/overwritten.',
   },
 };
 
@@ -88,15 +94,17 @@ ${bold('Usage')}
   npx nova-agents [options]
 
 ${bold('Options')}
-  --dir <path>     Target folder (default: current directory)
-  --lang <de|en>   Agent + document language (default: de)
-  --name <name>    Author name the agents greet you with
-  -y, --yes        Non-interactive: accept defaults / provided flags
-  -h, --help       Show this help
-  -v, --version    Show version
+  --dir <path>      Target folder (default: current directory)
+  --lang <de|en>    Agent + document language (default: de)
+  --name <name>     Author name the agents greet you with
+  --project <name>  Project name — also scaffolds projects/<name>/ (no sample files)
+  -y, --yes         Non-interactive: accept defaults / provided flags
+  -h, --help        Show this help
+  -v, --version     Show version
 
 ${bold('Examples')}
   npx nova-agents
+  npx nova-agents --project "Mein Roman" --lang de --name "Anton" --yes
   npx nova-agents --dir ./mein-roman --lang de --name "Anton" --yes
   npx github:awatzlawik/nova-agents
 `);
@@ -122,6 +130,15 @@ async function askLang(ask, def) {
   }
 }
 
+// Asked first, before the language toggle → bilingual prompt. Loops until non-empty.
+async function askProject(ask) {
+  while (true) {
+    const v = (await ask('Projektname / Project name', '')).trim();
+    if (v) return v;
+    console.log(red('  → bitte einen Projektnamen eingeben / please enter a project name'));
+  }
+}
+
 // ---------- yaml scalar patcher (preserves inline comments) ----------
 function setYamlScalar(content, key, value) {
   const re = new RegExp(`^(\\s*${key}\\s*:\\s*)(.*?)(\\s*#.*)?$`, 'm');
@@ -141,6 +158,32 @@ function copyDir(src, dest) {
     filter: (s) => {
       const base = path.basename(s);
       return base !== '__pycache__' && !base.endsWith('.pyc');
+    },
+  });
+}
+
+// ---------- project name → safe folder slug (keeps unicode letters, e.g. umlauts) ----------
+function slugifyProject(name) {
+  return String(name)
+    .trim()
+    .replace(/[\/\\]+/g, '-') // path separators → hyphen (never escape the projects/ dir)
+    .replace(/\s+/g, '-') // whitespace → hyphen
+    .replace(/[^\p{L}\p{N}._-]/gu, '') // drop punctuation, keep letters/digits/._-
+    .replace(/-+/g, '-') // collapse repeats
+    .replace(/^[-.]+|[-.]+$/g, ''); // trim leading/trailing - and .
+}
+
+// ---------- copy the _EXAMPLE skeleton into a fresh project, dropping the sample fixtures ----------
+function copyProjectSkeleton(src, dest) {
+  fs.cpSync(src, dest, {
+    recursive: true,
+    force: true,
+    filter: (s) => {
+      const base = path.basename(s);
+      if (base === '__pycache__' || base.endsWith('.pyc')) return false;
+      if (base === 'README.md') return false; // _EXAMPLE-only readme (documents the fixtures)
+      if (base.startsWith('sample-')) return false; // sample-beat-sheet.json, sample-chapter.md
+      return true;
     },
   });
 }
@@ -183,19 +226,29 @@ async function main() {
     : null;
 
   try {
-    // 1) language first when interactive (so subsequent prompts are localized)
+    // 1) project name FIRST (bilingual prompt — language not chosen yet)
+    let projectName = args.project;
+    if (projectName === undefined && interactive) {
+      projectName = await askProject(ask);
+    }
+
+    // 2) language (localizes every following prompt)
     if (interactive && args.lang === undefined) {
       lang = await askLang(ask, lang);
     }
     const t = STRINGS[lang];
 
-    // 2) target folder
+    // fall back to a sensible default when no project name was provided (non-interactive)
+    if (projectName === undefined || !String(projectName).trim()) projectName = t.defaultProject;
+    const projectSlug = slugifyProject(projectName) || t.defaultProject;
+
+    // 3) target folder
     if (targetArg === undefined) {
       targetArg = interactive ? await ask(t.askDir, process.cwd()) : process.cwd();
     }
     const targetDir = path.resolve(expandHome(targetArg));
 
-    // 3) author name
+    // 4) author name
     if (name === undefined) {
       name = interactive ? await ask(t.askName, t.defaultName) : t.defaultName;
     }
@@ -224,15 +277,26 @@ async function main() {
     cfg = setYamlScalar(cfg, 'author_name', quoteYaml(name));
     fs.writeFileSync(cfgPath, cfg);
 
+    // Scaffold the author's own project from the _EXAMPLE skeleton, minus the sample fixtures
+    const exampleSrc = path.join(templateDir, 'projects', '_EXAMPLE');
+    const projectDest = path.join(targetDir, 'projects', projectSlug);
+    let createdProject = false;
+    if (projectSlug !== '_EXAMPLE' && fs.existsSync(exampleSrc)) {
+      if (fs.existsSync(projectDest)) console.log('  ' + yellow(t.projectExists));
+      copyProjectSkeleton(exampleSrc, projectDest);
+      createdProject = true;
+    }
+
     // Report
     console.log('  ' + green('✓') + ' ' + t.wrote + ' nova/, .claude/skills/ (23 Agenten), projects/_EXAMPLE/');
+    if (createdProject) console.log('  ' + green('✓') + ' ' + t.projectCreated + ' projects/' + projectSlug + '/');
     console.log('  ' + green('✓') + ' ' + t.settingsSet + ` (${langWord}, ${name})`);
     console.log('');
     console.log('  ' + bold(green('✔ ' + t.done)));
     console.log('');
     console.log('  ' + bold(t.nextTitle));
     console.log('    1. ' + t.next1);
-    console.log('    2. ' + t.next2 + '  ' + cyan('/nova-orchestrator'));
+    console.log('    2. ' + t.next2 + '  ' + cyan('/nova-orchestrator') + dim('  →  ') + cyan('*plan ' + projectSlug));
     console.log('    3. ' + t.next3);
     console.log('');
   } catch (err) {

@@ -6,6 +6,26 @@
 
 Mit einem Befehl installierst du 23 spezialisierte Agenten (Premise-Analyst, World-Builder, Plot-Architect, Line-Editor, Continuity-Checker, Publish …) plus Konfiguration, Templates und ein Beispiel-Projekt in einen Ordner deiner Wahl.
 
+## 📑 Inhaltsverzeichnis
+
+- [🚀 Installation](#-installation)
+- [📦 Was wird installiert?](#-was-wird-installiert)
+- [▶️ Nach der Installation](#️-nach-der-installation)
+- [🎬 So arbeitest du mit NOVA — Phase für Phase](#-so-arbeitest-du-mit-nova--phase-für-phase)
+  - [🧭 Das mentale Modell](#-das-mentale-modell-in-30-sekunden)
+  - [Die Pipeline auf einen Blick](#die-pipeline-auf-einen-blick)
+  - [🧪 Phase 0 — Fundament](#-phase-0--fundament-optional-zum-warmwerden)
+  - [📐 Phase 1 — Planung](#-phase-1--planung-die-story-bible-bauen)
+  - [✍️ Phase 2 — Schreiben](#️-phase-2--schreiben-prosa-entsteht--von-dir)
+  - [🔍 Phase 3 — Review](#-phase-3--review-read-only-kritisch-nichts-wird-umgeschrieben)
+  - [📦 Phase 4 — Finalisierung](#-phase-4--finalisierung-feinschliff--export)
+  - [🧠 Die vier Modi](#-die-vier-modi-warum-nova-sich-bremst)
+  - [🗂️ Was wo gespeichert wird](#️-was-wo-gespeichert-wird)
+  - [⚡ Befehls-Spickzettel](#-befehls-spickzettel)
+- [💻 Plattform-Hinweise](#-plattform-hinweise)
+- [🛠️ Für Maintainer](#️-für-maintainer-auf-npm-veröffentlichen)
+- [📄 Lizenz](#-lizenz)
+
 ---
 
 ## 🚀 Installation
